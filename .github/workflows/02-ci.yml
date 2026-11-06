@@ -2,8 +2,7 @@ name: CI
 
 on: [push]
 
-env:
-  APP_NAME: fastapi-starter
+
 
 jobs:
   lint:
@@ -29,7 +28,6 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.13'
-      - run: pip install -r requirements.txt -r requirements-dev.txt
       - name: Compiler le code
         run: python -m compileall app
       - name: Importer l'application
@@ -47,6 +45,8 @@ jobs:
       - run: pip install -r requirements.txt -r requirements-dev.txt
       - run: pytest
       - name: Afficher le contexte
+        env:
+            APP_NAME: fastapi-starter
         run: |
           echo "App      : ${{ env.APP_NAME }}"
           echo "Acteur   : ${{ github.actor }}"
