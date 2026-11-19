@@ -38,7 +38,7 @@ jobs:
         run: echo "Debug mode enabled"
       - name: Compute full version
         id: version
-        run: 
+        run: |
             echo "full_version=${{ inputs.version }}-$(date +%F)" >> $GITHUB_OUTPUT
             echo "autre=test" > $GITHUB_OUTPUT
   verify-env:
@@ -47,7 +47,6 @@ jobs:
       - name: Print APP_NAME
         run: echo "APP_NAME=[$APP_NAME]"
   deploy:
-    needs: build
     runs-on: ubuntu-latest
     steps:
       - name: Show deployment target
