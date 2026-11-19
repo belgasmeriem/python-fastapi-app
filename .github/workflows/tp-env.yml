@@ -47,7 +47,6 @@ jobs:
       - name: Print APP_NAME
         run: echo "APP_NAME=[$APP_NAME]"
   deploy:
-    needs: build
     runs-on: ubuntu-latest
     steps:
       - name: Show deployment target
