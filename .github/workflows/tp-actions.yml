@@ -38,3 +38,12 @@ jobs:
           name: build-report
       - name: Print build report
         run: cat report.txt
+  docker-hello:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Run docker hello action
+        uses: ./.github/actions/docker-hello
+        with:
+          who: World
