@@ -23,3 +23,25 @@ Run complet et vert (lint, build → test) : https://github.com/belgasmeriem/pyt
 **Q9.** Sur un push : `event_name` = `push`, `head_ref` et `base_ref` sont vides, `ref_name` = `feature/tp-ci`. Sur une PR : `event_name` = `pull_request`, `head_ref` = `feature/tp-ci`, `base_ref` = `main`, `ref_name` = `1/merge`.
 
 **Q10.** Dans `toJson(github)` lors d'un push, le message est dans `event.head_commit.message` ("ci: ajoute pull_request"). Sur un `pull_request`, `head_commit` ne contient pas de message : seul le titre de la PR est fourni.
+# TP7 – Réponses
+
+Branche : `feature/tp-actions` – workflow : `.github/workflows/tp-actions.yml`
+Actions locales : `.github/actions/build-info` (composite) et `.github/actions/docker-hello` (Docker)
+
+**Q1.** Tous les inputs de `actions/checkout` ont une valeur par défaut (dépôt courant, ref du workflow, token automatique) : il peut s'utiliser sans `with`. `actions/setup-node` doit savoir quelle version de Node.js installer, donc `node-version` est fourni via `with`.
+
+**Q2.** Chaque job s'exécute sur un runner neuf, avec son propre système de fichiers. `report.txt` est généré pendant le job `build` et n'est pas commité : il n'existe donc pas dans le dépôt que `verify` récupère. Les deux jobs partagent le même dépôt, mais pas les fichiers créés à l'exécution. L'artefact (`upload-artifact` puis `download-artifact`) sert à transférer le fichier d'un job à l'autre.
+
+**Q6.** Le runner démarre avec un espace de travail vide. L'action locale `./.github/actions/build-info` est un fichier du dépôt : `actions/checkout` doit d'abord récupérer le code pour que l'action existe, sinon GitHub ne trouve pas son `action.yml`.
+
+**Q7.** Dans une action composite, les steps `run` n'héritent d'aucun shell par défaut (contrairement à un job classique) : il faut déclarer explicitement `shell: bash`.
+
+## Partie 4 – Action Docker : comparaison
+
+| Élément | Durée |
+|---|---|
+| Step `Run build info action` (composite) | X s |
+| Job `docker-hello` complet | Y s |
+| Step `Run docker hello action` (Docker) | Z s |
+
+L'action composite exécute de simples steps shell directement sur le runner : elle est quasi instantanée. L'action Docker doit d'abord construire l'image à partir du `Dockerfile` (téléchargement d'alpine:3.20, copie de `entrypoint.sh`) puis lancer le conteneur à chaque exécution : elle est donc nettement plus lente. Docker apporte en contrepartie un environnement isolé et reproductible, utile quand l'action a besoin d'un langage ou d'outils précis.
