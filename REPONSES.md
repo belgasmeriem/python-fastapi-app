@@ -23,3 +23,15 @@ Run complet et vert (lint, build → test) : https://github.com/belgasmeriem/pyt
 **Q9.** Sur un push : `event_name` = `push`, `head_ref` et `base_ref` sont vides, `ref_name` = `feature/tp-ci`. Sur une PR : `event_name` = `pull_request`, `head_ref` = `feature/tp-ci`, `base_ref` = `main`, `ref_name` = `1/merge`.
 
 **Q10.** Dans `toJson(github)` lors d'un push, le message est dans `event.head_commit.message` ("ci: ajoute pull_request"). Sur un `pull_request`, `head_commit` ne contient pas de message : seul le titre de la PR est fourni.
+
+# TP6 – Réponses
+
+**Q1.** GITHUB_ENV est un fichier lu par le runner seulement à la fin de la step ; les variables sont injectées dans l'environnement des steps suivantes.
+
+**Q2.** Dans verify-env, $APP_NAME est vide : chaque job tourne sur un runner distinct. La portée de GITHUB_ENV est limitée au job courant (steps suivantes).
+
+**Q3.** Avec `>`, le fichier est écrasé à chaque écriture : seul le dernier output est conservé, le premier est perdu. Il faut `>>`.
+
+**Q4.** GITHUB_ENV ne vit que dans un job. GITHUB_OUTPUT, couplé à `outputs:` du job et à `needs`, transmet la valeur d'un job à l'autre.
+
+**Q5.** Sans `needs: build`, deploy démarre en parallèle (pas d'ordre garanti) et `needs.build.outputs.full_version` est vide.
