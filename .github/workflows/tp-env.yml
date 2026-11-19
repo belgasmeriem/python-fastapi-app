@@ -38,7 +38,9 @@ jobs:
         run: echo "Debug mode enabled"
       - name: Compute full version
         id: version
-        run: echo "full_version=${{ inputs.version }}-$(date +%F)" >> $GITHUB_OUTPUT
+        run: 
+            echo "full_version=${{ inputs.version }}-$(date +%F)" >> $GITHUB_OUTPUT
+            echo "autre=test" > $GITHUB_OUTPUT
   verify-env:
     runs-on: ubuntu-latest
     steps:
