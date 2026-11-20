@@ -40,8 +40,8 @@ Actions locales : `.github/actions/build-info` (composite) et `.github/actions/d
 
 | Élément | Durée |
 |---|---|
-| Step `Run build info action` (composite) | X s |
-| Job `docker-hello` complet | Y s |
-| Step `Run docker hello action` (Docker) | Z s |
+| Step `Run build info action` (composite) | 0 s |
+| Job `docker-hello` complet | 6 s |
+| Step `Run docker hello action` (Docker) | 3 s |
 
-L'action composite exécute de simples steps shell directement sur le runner : elle est quasi instantanée. L'action Docker doit d'abord construire l'image à partir du `Dockerfile` (téléchargement d'alpine:3.20, copie de `entrypoint.sh`) puis lancer le conteneur à chaque exécution : elle est donc nettement plus lente. Docker apporte en contrepartie un environnement isolé et reproductible, utile quand l'action a besoin d'un langage ou d'outils précis.
+L'action composite exécute de simples steps shell directement sur le runner : elle s'exécute en 0 s. L'action Docker doit construire l'image à partir du `Dockerfile` (image alpine:3.20, copie de `entrypoint.sh`) puis lancer le conteneur à chaque exécution : elle prend 3 s, soit nettement plus. Docker apporte en contrepartie un environnement isolé et reproductible, utile quand l'action a besoin d'un langage ou d'outils précis. La sortie `Hello, World` confirme que le conteneur s'est bien exécuté.
